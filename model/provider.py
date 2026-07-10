@@ -25,6 +25,11 @@ DEFAULT_BASE_URL = "http://localhost:1234/v1"
 DEFAULT_MODEL = "google/gemma-4-26b-a4b"
 DEFAULT_API_KEY = "lm-studio"
 
+# A streaming sink: called per token with ``(channel, text)`` where channel is
+# "content" (the visible answer) or "reasoning" (the model's thinking). Optional
+# everywhere — pass ``None`` and the seam is the same blocking call as before.
+OnDelta = Callable[[str, str], None]
+
 
 def _find_dotenv_path() -> Path | None:
     """Locate a .env file from the current working directory or repo root."""
