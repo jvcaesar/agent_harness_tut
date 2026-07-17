@@ -31,6 +31,7 @@ def complete_openai(
     max_tokens: int = 1024,
     timeout: float = 180.0,
     on_delta: OnDelta | None = None,
+    response_format: dict | None = None,
 ) -> LLMResponse:
     """One call to an OpenAI-compatible model, through a provider.
 
@@ -40,6 +41,9 @@ def complete_openai(
     When ``on_delta`` is given, the call streams: tokens are handed to the callback
     as they arrive and the same ``LLMResponse`` is assembled at the end. When it is
     ``None`` this is the original blocking POST, byte-for-byte unchanged.
+
+    ``response_format``, when given, is forwarded to the endpoint verbatim to
+    constrain the model to structured output.
     """
     base_url = provider.base_url.rstrip("/")
     if not base_url:
@@ -59,6 +63,8 @@ def complete_openai(
     }
     if tools:
         payload["tools"] = tools
+    if response_format:
+        payload["response_format"] = response_format
 
     verify_value = os.environ.get("LLM_VERIFY_SSL", "true").strip().lower()
     if verify_value in {"0", "false", "no", "off"}:

@@ -117,7 +117,7 @@ class Provider:
     responder: Callable[..., LLMResponse] | None = None
 
     @classmethod
-    def from_env(cls) -> Provider:
+    def from_env(cls, root: str | Path = ".") -> Provider:
         _load_dotenv()
         return cls(
             base_url=str(os.environ.get("LLM_BASE_URL", DEFAULT_BASE_URL)).strip(),
